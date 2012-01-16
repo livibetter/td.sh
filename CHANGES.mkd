@@ -1,6 +1,12 @@
 Changelog
 =========
 
-# 2012-01-16T21:13:41Z
+## Version 1.0 (2012-01-16T22:57:18Z)
+
+ * Add -p/-P padding options.
+ * Add -a for printing out all numbers.
+ * Remove -s option, it isn't needed anymore for sourcing.
+
+## 2012-01-16T21:13:41Z
 
   Files has been moved to GitHub and re-licensed under the MIT License.
