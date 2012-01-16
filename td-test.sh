@@ -6,17 +6,17 @@ test_counts=0
 test_failures=0
 
 test_eq() {
-	((test_counts++))
-	result="$("$TD" "$1")"
-	if [[ "$result" == "$2" ]]; then
-		echo "Passed: $1 => \"$result\""
-		return 0
-	else
-		((test_failures++))
-		echo "Failed: $1 => \"$result\" != \"$2\"" >&2
-		return 1
-	fi
-	}
+  ((test_counts++))
+  result="$("$TD" "$1")"
+  if [[ "$result" == "$2" ]]; then
+    echo "Passed: $1 => \"$result\""
+    return 0
+  else
+    ((test_failures++))
+    echo "Failed: $1 => \"$result\" != \"$2\"" >&2
+    return 1
+  fi
+  }
 
 test_eq 0 "0 seconds"
 test_eq 1 "1 second"

@@ -1,0 +1,11 @@
+td.sh
+=====
+
+Converting seconds to human readable time duration.
+
+License
+-------
+
+This project is licensed under the MIT License.
+
+    Copyright (c) 2010, 2012 Yu-Jie Lin
