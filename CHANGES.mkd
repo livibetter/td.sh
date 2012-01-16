@@ -1,0 +1,6 @@
+Changelog
+=========
+
+# 2012-01-16T21:13:41Z
+
+  Files has been moved to GitHub and re-licensed under the MIT License.

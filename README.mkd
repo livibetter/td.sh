@@ -3,6 +3,20 @@ td.sh
 
 Converting seconds to human readable time duration.
 
+Usage
+-----
+
+The basic usage:
+
+    $ ./td.sh 123
+    2 minutes 3 seconds
+
+You can source the script to have `print_td` function for better performance:
+
+    $ source td.sh -s
+    $ print_td 123
+    2 minutes 3 seconds
+
 License
 -------
 
