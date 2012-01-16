@@ -13,9 +13,19 @@ The basic usage:
 
 You can source the script to have `print_td` function for better performance:
 
-    $ source td.sh -s
+    $ source td.sh
     $ print_td 123
     2 minutes 3 seconds
+
+### Options
+
+    -a     prints all number even they are zeros.
+    -p[X]  padding for numbers. 'X' is the padding character, default is ' '.
+    -P     padding for unit strings.
+
+ * `-a` will prints all numbers and units even the numbers are zeros.
+ * `-p` prints out like ` 1 second` or `-p0` for `01 second` or `07 seconds`.
+ * `-P` prints out like `1 minute  12 seconds`, note there is additional space after `minute`.
 
 License
 -------

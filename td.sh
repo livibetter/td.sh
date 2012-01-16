@@ -20,13 +20,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-if (($# != 1)); then
-  echo "Usage: $(basename "$0") <seconds|-s>
-  -s: for sourcing, e.g. \`source $(basename "$0") -s\`
-      then you can use \`print_td <seconds>\` in your script.
-" >&2
-  exit 1
-fi
+usage() {
+  echo "Usage: $(basename "$0") [options] [seconds[ seconds[ seconds[...]]]]
+
+Options:
+
+  -a     prints all number even they are zeros.
+  -p[X]  padding for numbers. 'X' is the padding character, default is ' '.
+  -P     padding for unit strings.
+  -h     this help message.
+
+Note:
+
+  You can \`source $(basename "$0")\` then use \`print_td <seconds>\` in your script.
+"
+}
 
 units=(second minute hour day)
 
@@ -36,14 +44,53 @@ print_td() {
 
   result=""
   for ((idx=${#units[@]}-1;idx>=0;idx--)) {
-    ((nums[idx] == 0)) && continue;
-    result="$result ${nums[idx]} ${units[idx]}"
-    ((nums[idx] != 1)) && result="${result}s"
+    ((nums[idx] == 0)) && [[ -z $TD_SH_PRINTS_ZEROS ]] && continue;
+    # Handling Number Padding
+    if (( nums[idx] < 10 )) && [[ ! -z $TD_SH_NUMB_PADDING ]]; then
+      result="$result ${TD_SH_NUMB_PADDING}${nums[idx]}"
+    else
+      result="$result ${nums[idx]}"
+    fi
+
+    result="$result ${units[idx]}"
+    # Handling Unit Padding
+    if ((nums[idx] != 1)); then
+      result="${result}s"
+    elif [[ ! -z $TD_SH_UNIT_PADDING ]]; then
+      result="${result} "
+    else
+      result="${result}"
+    fi
     }
   [[ -z "$result" ]] && result="0 seconds"
   echo "${result# }"
   }
 
-if [[ "$1" != "-s" ]]; then
-  print_td $1
-fi
+shopt -s extglob
+
+TD_SH_PRINTS_ZEROS=
+TD_SH_UNIT_PADDING=
+TD_SH_NUMB_PADDING=
+
+for arg in "$@"; do
+  case "$arg" in
+    ?(-)+([[:digit:]]))
+      print_td "$arg"
+      ;;
+    -a)
+      TD_SH_PRINTS_ZEROS="ON"
+      ;;
+    -P)
+      TD_SH_UNIT_PADDING="ON"
+      ;;
+    -p)
+      TD_SH_NUMB_PADDING=" "
+      ;;
+    -p?)
+      TD_SH_NUMB_PADDING=${arg:2:1}
+      ;;
+    -h)
+      usage
+      ;;
+  esac
+done
