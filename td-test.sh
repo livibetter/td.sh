@@ -12,11 +12,11 @@ test_eq() {
   shift 2
   result="$("$TD" "$@" "$test_val")"
   if [[ "$result" == "$test_ans" ]]; then
-    echo "Passed: "$test_val" => \"$result\""
+    printf "Passed: %10s %-10s => %s\n" "$test_val" "$*" "\"$result\""
     return 0
   else
     ((test_failures++))
-    echo "Failed: "$test_val" => \"$result\" != \"$test_ans\"" >&2
+    printf "Failed: %10s %-10s => %s != %s\n" "$test_val" "$*" "\"$result\"" "\"$test_ans\"" >&2
     return 1
   fi
   }

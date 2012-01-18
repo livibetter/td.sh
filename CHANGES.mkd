@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## Version 1.0.1 (2012-01-18T20:42:10Z)
+
+ * Make test script print out the testing parameters, such as -P, -p, etc.
+
 ## Version 1.0 (2012-01-16T22:57:18Z)
 
  * Add -p/-P padding options.
