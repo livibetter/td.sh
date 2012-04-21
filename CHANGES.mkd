@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## Version 1.0.2 (2012-04-21T17:14:23Z)
+
+ * Add Makefile for easy installation
+
 ## Version 1.0.1 (2012-01-18T20:42:10Z)
 
  * Make test script print out the testing parameters, such as -P, -p, etc.

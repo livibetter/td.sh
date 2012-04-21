@@ -3,6 +3,23 @@ td.sh
 
 Converting seconds to human readable time duration.
 
+Installation
+------------
+
+By default, to install to `/usr/local`, run:
+
+    $ make install
+
+Or to `/usr`:
+    
+    $ make install PREFIX=/usr
+
+Or to your home:
+
+    $ make install PREFIX=$HOME
+
+To uninstall, use `uninstall` target with `PREFIX` if supplied during installation.
+
 Usage
 -----
 
@@ -45,7 +62,7 @@ You can source the script to have `print_td` function for better performance:
 Tests
 -----
 
-There is a script named `td-test.sh` for testing.
+There is a script named `td-test.sh` for testing, you can also run `make test`.
 
 Links
 -----
