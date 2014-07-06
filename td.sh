@@ -1,6 +1,6 @@
 #!/bin/bash
 # Converting seconds to human readable time duration.
-# Copyright (c) 2010, 2012 Yu-Jie Lin
+# Copyright (c) 2010, 2012, 2014 Yu-Jie Lin
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -72,25 +72,31 @@ TD_SH_PRINTS_ZEROS=
 TD_SH_UNIT_PADDING=
 TD_SH_NUMB_PADDING=
 
-for arg in "$@"; do
-  case "$arg" in
-    ?(-)+([[:digit:]]))
-      print_td "$arg"
-      ;;
+
+eval set -- $(getopt -- aPp::h "$@")
+while (($#)); do
+  case "$1" in
     -a)
       TD_SH_PRINTS_ZEROS="ON"
+      shift
       ;;
     -P)
       TD_SH_UNIT_PADDING="ON"
+      shift
       ;;
     -p)
-      TD_SH_NUMB_PADDING=" "
-      ;;
-    -p?)
-      TD_SH_NUMB_PADDING=${arg:2:1}
+      TD_SH_NUMB_PADDING=${2:- }
+      shift 2
       ;;
     -h)
       usage
       ;;
+    --)
+      shift
+      break
   esac
+done
+
+for t in $@; do
+  print_td "$t"
 done

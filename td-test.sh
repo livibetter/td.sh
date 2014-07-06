@@ -10,7 +10,7 @@ test_eq() {
   test_val="$1"
   test_ans="$2"
   shift 2
-  result="$("$TD" "$@" "$test_val")"
+  result="$("$TD" "$@" -- "$test_val")"
   if [[ "$result" == "$test_ans" ]]; then
     printf "Passed: %10s %-10s => %s\n" "$test_val" "$*" "\"$result\""
     return 0

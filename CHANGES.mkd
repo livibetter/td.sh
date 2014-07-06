@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## Version 1.0.3 (2014-07-06T07:55:13Z)
+
+* fix negative durations should be after `--` by using getopt, and the test
+  (#3)
+
 ## Version 1.0.2 (2012-04-21T17:14:23Z)
 
  * Add Makefile for easy installation
