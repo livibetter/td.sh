@@ -1,6 +1,8 @@
 Changelog
 =========
 
+* add test for multiple duration and use `%q` to print out strings
+
 ## Version 1.0.3 (2014-07-06T07:55:13Z)
 
 * fix negative durations should be after `--` by using getopt, and the test

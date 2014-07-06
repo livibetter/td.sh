@@ -10,13 +10,13 @@ test_eq() {
   test_val="$1"
   test_ans="$2"
   shift 2
-  result="$("$TD" "$@" -- "$test_val")"
+  result="$("$TD" "$@" -- $test_val)"
   if [[ "$result" == "$test_ans" ]]; then
-    printf "Passed: %10s %-10s => %s\n" "$test_val" "$*" "\"$result\""
+    printf "Passed: %10s %-10s => %q\n" "$test_val" "$*" "$result"
     return 0
   else
     ((test_failures++))
-    printf "Failed: %10s %-10s => %s != %s\n" "$test_val" "$*" "\"$result\"" "\"$test_ans\"" >&2
+    printf "Failed: %10s %-10s => %q != %q\n" "$test_val" "$*" "$result" "$test_ans" >&2
     return 1
   fi
   }
@@ -44,6 +44,7 @@ test_eq 60 "01 minute " -P -p0
 test_eq 60 " 0 days  0 hours  1 minute  0 seconds" -p -a
 test_eq 60 "0 days 0 hours 1 minute  0 seconds" -P -a
 test_eq 60 " 0 days  0 hours  1 minute   0 seconds" -P -p -a
+test_eq "1 60" $'1 second \n1 minute ' -P
 
 echo "$test_failures failures of $test_counts tests."
 
