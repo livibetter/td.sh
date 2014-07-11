@@ -1,1 +1,15 @@
+*.log
+INSTALL
+Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache/
+config.*
+configure
+depcomp
+install-sh
+missing
+src/.deps
 src/td
+stamp-h1
+td-*.*.*
