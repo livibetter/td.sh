@@ -1,5 +1,5 @@
 /***********************************************************************************/
-/* td: main.c - the C of td.sh                                                     */
+/* td.c Converting seconds to human readable time duration.                        */
 /* Copyright (c) 2014 Yu-Jie Lin                                                   */
 /*                                                                                 */
 /* Permission is hereby granted, free of charge, to any person obtaining a copy of */
@@ -21,48 +21,48 @@
 /* SOFTWARE.                                                                       */
 /***********************************************************************************/
 
-#include <td.h>
-
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
-#define PROGRAM "td"
+char *units[] = {"second", "minute", "hour", "day"};
+int n_units = sizeof(units) / sizeof(char *);
 
-int
-main(int argc, char *argv[])
+void
+print_td(long long t, bool print_all_numbers, bool pad_units, char pad_char)
 {
   int i;
-  int opt;
-  bool print_all_numbers = false;
-  bool pad_units = false;
-  char pad_char = '\0';
-  long long t;
+  long long n[] = {
+    abs(t) % 60,
+    abs(t) / 60 % 60,
+    abs(t) / 3600 % 24,
+    abs(t) / 86400
+  };
+  /* space between two components */
+  bool need_space = false;
 
-  while ((opt = getopt(argc, argv, "aPp::")) != -1) {
-    switch (opt) {
-    case 'a':
-      print_all_numbers = true;
-      break;
-    case 'P':
-      pad_units = true;
-      break;
-    case 'p':
-      if (!optarg)
-        pad_char = ' ';
-      else
-        pad_char = optarg[0];
-      break;
-    default:
-      fprintf(stderr, "Usage %s [-P]", PROGRAM);
-      exit(EXIT_FAILURE);
+  if (t == 0) {
+    printf("0 seconds");
+    return;
+  }
+
+  for (i = n_units - 1; i >= 0; i--) {
+    if (n[i] || print_all_numbers) {
+      if (need_space) {
+        printf(" ");
+        need_space = false;
+      }
+      if (n[i] < 10)
+        printf("%c", pad_char);
+      if (n[i] == 1) {
+        if (pad_units)
+          printf("%lld %s ", n[i], units[i]);
+        else
+          printf("%lld %s", n[i], units[i]);
+      } else
+        printf("%lld %ss", n[i], units[i]);
+      need_space = true;
     }
   }
-
-  for (i = optind; i < argc; i++) {
-    t = atoll(argv[i]);
-    print_td(t, print_all_numbers, pad_units, pad_char);
-  }
-  return 0;
+  printf("\n");
 }

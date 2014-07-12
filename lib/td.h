@@ -1,5 +1,4 @@
 /***********************************************************************************/
-/* td: main.c - the C of td.sh                                                     */
 /* Copyright (c) 2014 Yu-Jie Lin                                                   */
 /*                                                                                 */
 /* Permission is hereby granted, free of charge, to any person obtaining a copy of */
@@ -21,48 +20,6 @@
 /* SOFTWARE.                                                                       */
 /***********************************************************************************/
 
-#include <td.h>
-
 #include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 
-#define PROGRAM "td"
-
-int
-main(int argc, char *argv[])
-{
-  int i;
-  int opt;
-  bool print_all_numbers = false;
-  bool pad_units = false;
-  char pad_char = '\0';
-  long long t;
-
-  while ((opt = getopt(argc, argv, "aPp::")) != -1) {
-    switch (opt) {
-    case 'a':
-      print_all_numbers = true;
-      break;
-    case 'P':
-      pad_units = true;
-      break;
-    case 'p':
-      if (!optarg)
-        pad_char = ' ';
-      else
-        pad_char = optarg[0];
-      break;
-    default:
-      fprintf(stderr, "Usage %s [-P]", PROGRAM);
-      exit(EXIT_FAILURE);
-    }
-  }
-
-  for (i = optind; i < argc; i++) {
-    t = atoll(argv[i]);
-    print_td(t, print_all_numbers, pad_units, pad_char);
-  }
-  return 0;
-}
+void print_td(long long t, bool print_all_numbers, bool pad_units, char pad_char);
