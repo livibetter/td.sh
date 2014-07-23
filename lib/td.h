@@ -22,4 +22,5 @@
 
 #include <stdbool.h>
 
+int sprint_td(char *str, long long t, bool print_all_numbers, bool pad_units, char pad_char);
 void print_td(long long t, bool print_all_numbers, bool pad_units, char pad_char);

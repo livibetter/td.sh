@@ -24,12 +24,13 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 char *units[] = {"second", "minute", "hour", "day"};
 int n_units = sizeof(units) / sizeof(char *);
 
-void
-print_td(long long t, bool print_all_numbers, bool pad_units, char pad_char)
+int
+sprint_td(char *str, long long t, bool print_all_numbers, bool pad_units, char pad_char)
 {
   int i;
   long long n[] = {
@@ -42,27 +43,37 @@ print_td(long long t, bool print_all_numbers, bool pad_units, char pad_char)
   bool need_space = false;
 
   if (t == 0) {
-    printf("0 seconds");
-    return;
+    sprintf(str, "0 seconds");
+    return strlen(str);
   }
 
   for (i = n_units - 1; i >= 0; i--) {
     if (n[i] || print_all_numbers) {
       if (need_space) {
-        printf(" ");
+        strcat(str + strlen(str), " ");
         need_space = false;
       }
       if (n[i] < 10)
-        printf("%c", pad_char);
+        sprintf(str + strlen(str), "%c", pad_char);
       if (n[i] == 1) {
         if (pad_units)
-          printf("%lld %s ", n[i], units[i]);
+          sprintf(str + strlen(str), "%lld %s ", n[i], units[i]);
         else
-          printf("%lld %s", n[i], units[i]);
+          sprintf(str + strlen(str), "%lld %s", n[i], units[i]);
       } else
-        printf("%lld %ss", n[i], units[i]);
+        sprintf(str + strlen(str), "%lld %ss", n[i], units[i]);
       need_space = true;
     }
   }
-  printf("\n");
+
+  return strlen(str);
+}
+
+void
+print_td(long long t, bool print_all_numbers, bool pad_units, char pad_char)
+{
+  char str[64] = "";
+
+  sprint_td(str, t, print_all_numbers, pad_units, pad_char);
+  puts(str);
 }
