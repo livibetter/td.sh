@@ -32,6 +32,7 @@ AC_CONFIG_FILES([
   lib/Makefile
   src/Makefile
   tests/Makefile
+  tests/atlocal
 ])
 
 AC_OUTPUT

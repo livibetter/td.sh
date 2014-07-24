@@ -1,0 +1,7 @@
+AT_INIT
+AT_COLOR_TESTS
+AT_SETUP([multiple inputs])
+AT_CHECK([$abs_top_builddir/src/td 1 60],,[1 second
+1 minute
+])
+AT_CLEANUP
