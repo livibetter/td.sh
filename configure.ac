@@ -10,11 +10,14 @@ AM_PROG_AR
 LT_INIT
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_TESTDIR([tests])
 
 # Checks for programs.
 AC_PROG_CC
+AM_PROG_CC_C_O
 
 # Checks for libraries.
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h unistd.h])
@@ -24,5 +27,11 @@ AC_CHECK_HEADER_STDBOOL
 
 # Checks for library functions.
 
-AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile])
+AC_CONFIG_FILES([
+  Makefile
+  lib/Makefile
+  src/Makefile
+  tests/Makefile
+])
+
 AC_OUTPUT
