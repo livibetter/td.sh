@@ -1,0 +1,15 @@
+*.log
+.deps
+.libs
+INSTALL
+Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache
+build-aux
+config.*
+configure
+libtool
+m4
+stamp-h1
+td-*.*.*
