@@ -3,6 +3,5 @@ atlocal
 benchmark.sh
 check_libtd
 package.m4
+testsuite
 testsuite.dir
-testsuite.td
-testsuite.td.sh

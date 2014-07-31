@@ -29,42 +29,34 @@ EXTRA_DIST = \
   $(srcdir)/package.m4 \
   atlocal.in \
   $(TESTSUITE_ATS) \
-  $(TESTSUITES) \
+  $(TESTSUITE) \
   benchmark.sh.in
-TESTSUITES = \
-  $(srcdir)/testsuite.td \
-  $(srcdir)/testsuite.td.sh
+TESTSUITE = $(srcdir)/testsuite
 TESTSUITE_ATS = \
-  $(srcdir)/testsuite.td.at \
-  $(srcdir)/testsuite.td.sh.at
+  $(srcdir)/testsuite.at \
+  $(srcdir)/testsuite.td.at
 
-check-local: atconfig atlocal run-check-programs $(TESTSUITES)
-	for testsuite in $(TESTSUITES); do \
-	  $(SHELL) "$$testsuite" $(TESTSUITEFLAGS); \
-	done
+check-local: $(TESTSUITE_ATS) atconfig atlocal $(TESTSUITE) run-check-programs
+	$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
 
 run-check-programs: $(check_PROGRAMS)
 	for check_program in $^; do \
 	  $(SHELL) "$$check_program" || exit 1; \
 	done
 
-installcheck-local: atconfig atlocal $(TESTSUITES)
-	for testsuite in $(TESTSUITES); do \
-	  $(SHELL) "$$testsuite" AUTOTEST_PATH='$(bindir)' \
-	    $(TESTSUITEFLAGS); \
-	done
+installcheck-local: atconfig atlocal $(TESTSUITE)
+	$(SHELL) '$(TESTSUITE)' AUTOTEST_PATH='$(bindir)' \
+	  $(TESTSUITEFLAGS)
 
 DISTCLEANFILES = atconfig
 
 clean-local:
-	for testsuite in $(TESTSUITES); do \
-	  test ! -f "$$testsuite" || \
-	    $(SHELL) "$$testsuite" --clean; \
-	done
+	test ! -f '$(TESTSUITE)' || \
+	  $(SHELL) '$(TESTSUITE)' --clean
 
 AUTOM4TE = $(SHELL) $(top_srcdir)/build-aux/missing --run autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
-$(TESTSUITES): $(TESTSUITE_ATS) $(srcdir)/package.m4
+$(TESTSUITE): $(TESTSUITE_ATS) $(srcdir)/package.m4
 	$(AUTOTEST) -I '$(srcdir)' -o $@.tmp $@.at
 	mv $@.tmp $@
 

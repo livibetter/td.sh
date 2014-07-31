@@ -1,0 +1,4 @@
+AT_INIT
+AT_COLOR_TESTS
+
+m4_include([testsuite.td.at])

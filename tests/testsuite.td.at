@@ -1,7 +1,111 @@
-AT_INIT
-AT_COLOR_TESTS
-AT_SETUP([multiple inputs])
-AT_CHECK([$abs_top_builddir/src/td 1 60],,[1 second
+m4_define([AT_TD_TEST], [
+AT_SETUP([$1])
+
+AT_CHECK([$2 0],,
+[0 seconds
+])
+
+AT_CHECK([$2 1],,
+[1 second
+])
+
+AT_CHECK([$2 -- -1],,
+[1 second
+])
+
+AT_CHECK([$2 2],,
+[2 seconds
+])
+
+AT_CHECK([$2 60],,
+[1 minute
+])
+
+AT_CHECK([$2 61],,
+[1 minute 1 second
+])
+
+AT_CHECK([$2 3599],,
+[59 minutes 59 seconds
+])
+
+AT_CHECK([$2 3600],,
+[1 hour
+])
+
+AT_CHECK([$2 3601],,
+[1 hour 1 second
+])
+
+AT_CHECK([$2 3660],,
+[1 hour 1 minute
+])
+
+AT_CHECK([$2 3661],,
+[1 hour 1 minute 1 second
+])
+
+AT_CHECK([$2 86400],,
+[1 day
+])
+
+AT_CHECK([
+  let s=86400+86400-1
+  $2 $s
+],,
+[1 day 23 hours 59 minutes 59 seconds
+])
+
+AT_CHECK([
+  let s=2*86400+86400-1
+  $2 $s
+],,
+[2 days 23 hours 59 minutes 59 seconds
+])
+
+AT_CHECK([
+  let s=366*86400+1
+  $2 $s
+],,
+[366 days 1 second
+])
+
+AT_CHECK([$2 -P 1],,
+[1 second @&t@
+])
+
+AT_CHECK([$2 -P 60],,
+[1 minute @&t@
+])
+
+AT_CHECK([$2 -P -p 60],,
+[ 1 minute @&t@
+])
+
+AT_CHECK([$2 -P -p0 60],,
+[01 minute @&t@
+])
+
+AT_CHECK([$2 -p -a 60],,
+[ 0 days  0 hours  1 minute  0 seconds
+])
+
+AT_CHECK([$2 -P -a 60],,
+[0 days 0 hours 1 minute  0 seconds
+])
+
+AT_CHECK([$2 -P -p -a 60],,
+[ 0 days  0 hours  1 minute   0 seconds
+])
+
+AT_CHECK([$2 1 60],,
+[1 second
 1 minute
 ])
+
 AT_CLEANUP
+])  # AT_TD_TEST
+
+AT_TD_TEST([td], [$abs_top_builddir/src/td])
+
+AT_TD_TEST([td.sh], [$abs_top_builddir/src/td.sh])
