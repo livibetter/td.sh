@@ -62,6 +62,8 @@ START_TEST (test_libtd)
   TEST_SPRINT_TD(str,    60, false,  true,  ' ', " 1 minute ");
   TEST_SPRINT_TD(str,    60, false,  true,  '0', "01 minute ");
 
+  TEST_SPRINT_TD(str,     0,  true, false, '\0', "0 days 0 hours 0 minutes 0 seconds");
+
   TEST_SPRINT_TD(str,    60,  true, false,  ' ', " 0 days  0 hours  1 minute  0 seconds");
   TEST_SPRINT_TD(str,    60,  true,  true, '\0', "0 days 0 hours 1 minute  0 seconds");
   TEST_SPRINT_TD(str,    60,  true,  true,  ' ', " 0 days  0 hours  1 minute   0 seconds");

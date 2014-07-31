@@ -86,6 +86,10 @@ AT_CHECK([$2 -P -p0 60],,
 [01 minute @&t@
 ])
 
+AT_CHECK([$2 -a 0],,
+[0 days 0 hours 0 minutes 0 seconds
+])
+
 AT_CHECK([$2 -p -a 60],,
 [ 0 days  0 hours  1 minute  0 seconds
 ])

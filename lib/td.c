@@ -42,7 +42,7 @@ sprint_td(char *str, long long t, bool print_all_numbers, bool pad_units, char p
   /* space between two components */
   bool need_space = false;
 
-  if (t == 0) {
+  if (t == 0 && !print_all_numbers) {
     sprintf(str, "0 seconds");
     return strlen(str);
   }
