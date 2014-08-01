@@ -79,3 +79,22 @@ AM_CONDITIONAL([ENABLE_BASH], [test "x$enable_bash" != xno])
 AM_CONDITIONAL([ENABLE_C],    [test "x$enable_c"    != xno])
 
 AC_OUTPUT
+
+AC_MSG_RESULT([
+  package             = ${PACKAGE}
+  version             = ${VERSION}
+
+  prefix              = ${prefix}
+  exec_prefix         = ${exec_prefix}
+
+  bindir              = ${bindir}
+  libdir              = ${libdir}
+  includedir          = ${includedir}
+
+  CC                  = ${CC}
+  CFLAGS              = ${CFLAGS}
+  LDFLAGS             = ${LDFLAGS}
+
+  build Bash          = ${enable_bash}
+  build C             = ${enable_c}
+])
