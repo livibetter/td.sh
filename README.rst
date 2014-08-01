@@ -13,11 +13,18 @@ td.sh
 Installation
 ============
 
+When installing from Git repository, run the following command to initialize
+required files:
+
+.. code:: sh
+
+  $ autoreconf --install
+
 By default, to install to ``/usr/local``, run:
 
 .. code:: sh
 
-  $ make install
+  $ ./configure && make && make install
 
 Or to ``/usr``:
 
