@@ -2,39 +2,50 @@
 
 trap 'kill $tmpcount_pid ; rm "$tmpcount" ; exit 130' INT
 
-# Performance test for src/td.sh
+enable_bash=@enable_bash@
+enable_c=@enable_c@
 
-TD="@abs_top_builddir@/src/td.sh"
+if test "x$enable_bash" != xno; then
 
-echo "Benchmarking $TD"
-echo -n "Please wait for 5 seconds..."
-tmpcount="$(mktemp)"
-( trap exit TERM; source "$TD"; while :; do print_td 180122; echo >> "$tmpcount"; done ) &>/dev/null &
-tmpcount_pid=$!
-sleep 5
-kill $tmpcount_pid
-echo -ne "\e[2K\e[0G$(bc <<< "$(wc -l < "$tmpcount") / 5") conversions per second via function calls.\n"
-rm "$tmpcount"
+  # Performance test for src/td.sh
 
-echo -n "Please wait for 5 seconds..."
-tmpcount="$(mktemp)"
-( trap exit TERM; while :; do "$TD" 180122; echo >> "$tmpcount"; done ) &>/dev/null &
-tmpcount_pid=$!
-sleep 5
-kill $tmpcount_pid
-echo -ne "\e[2K\e[0G$(bc <<< "$(wc -l < "$tmpcount") / 5") conversions per second via script executions.\n"
-rm "$tmpcount"
+  TD="@abs_top_builddir@/src/td.sh"
 
-# Performance test for src/td
+  echo "Benchmarking $TD"
+  echo -n "Please wait for 5 seconds..."
+  tmpcount="$(mktemp)"
+  ( trap exit TERM; source "$TD"; while :; do print_td 180122; echo >> "$tmpcount"; done ) &>/dev/null &
+  tmpcount_pid=$!
+  sleep 5
+  kill $tmpcount_pid
+  echo -ne "\e[2K\e[0G$(bc <<< "$(wc -l < "$tmpcount") / 5") conversions per second via function calls.\n"
+  rm "$tmpcount"
 
-TD="@abs_top_builddir@/src/td"
+  echo -n "Please wait for 5 seconds..."
+  tmpcount="$(mktemp)"
+  ( trap exit TERM; while :; do "$TD" 180122; echo >> "$tmpcount"; done ) &>/dev/null &
+  tmpcount_pid=$!
+  sleep 5
+  kill $tmpcount_pid
+  echo -ne "\e[2K\e[0G$(bc <<< "$(wc -l < "$tmpcount") / 5") conversions per second via script executions.\n"
+  rm "$tmpcount"
 
-echo "Benchmarking $TD"
-echo -n "Please wait for 5 seconds..."
-tmpcount="$(mktemp)"
-( trap exit TERM; while :; do "$TD" 180122; echo >> "$tmpcount"; done ) &>/dev/null &
-tmpcount_pid=$!
-sleep 5
-kill $tmpcount_pid
-echo -ne "\e[2K\e[0G$(bc <<< "$(wc -l < "$tmpcount") / 5") conversions per second.\n"
-rm "$tmpcount"
+fi
+
+if test "x$enable_c" != xno; then
+
+  # Performance test for src/td
+
+  TD="@abs_top_builddir@/src/td"
+
+  echo "Benchmarking $TD"
+  echo -n "Please wait for 5 seconds..."
+  tmpcount="$(mktemp)"
+  ( trap exit TERM; while :; do "$TD" 180122; echo >> "$tmpcount"; done ) &>/dev/null &
+  tmpcount_pid=$!
+  sleep 5
+  kill $tmpcount_pid
+  echo -ne "\e[2K\e[0G$(bc <<< "$(wc -l < "$tmpcount") / 5") conversions per second.\n"
+  rm "$tmpcount"
+
+fi

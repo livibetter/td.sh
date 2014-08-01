@@ -1,10 +1,17 @@
-AM_CFLAGS = -std=c99 -Wall -Wextra
+# ensure all output files will be cleaned despite the used options changeing
+# in invoking ./configure
 
-check_PROGRAMS = check_libtd
+check_PROGRAMS__ = check_libtd
 
-check_libtd_SOURCES = check_libtd.c $(top_srcdir)/lib/td.h
-check_libtd_CFLAGS  = $(AM_CFLAGS) @CHECK_CFLAGS@
-check_libtd_LDADD   = $(top_builddir)/lib/libtd.la @CHECK_LIBS@
+if ENABLE_C
+  AM_CFLAGS = -std=c99 -Wall -Wextra
+
+  check_PROGRAMS = $(check_PROGRAMS__)
+
+  check_libtd_SOURCES = check_libtd.c $(top_srcdir)/lib/td.h
+  check_libtd_CFLAGS  = $(AM_CFLAGS) @CHECK_CFLAGS@
+  check_libtd_LDADD   = $(top_builddir)/lib/libtd.la @CHECK_LIBS@
+endif
 
 # Modified from Autoconf manual
 # The `:;' works around a Bash 3.2 bug when the output is not writable.
@@ -37,7 +44,10 @@ TESTSUITE_ATS = \
   $(srcdir)/testsuite.td.at
 
 check-local: $(TESTSUITE_ATS) atconfig atlocal $(TESTSUITE) run-check-programs
-	$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
+	$(SHELL) '$(TESTSUITE)' \
+	  --enable-bash=$(enable_bash) \
+	  --enable-c=$(enable_c) \
+	  $(TESTSUITEFLAGS)
 
 run-check-programs: $(check_PROGRAMS)
 	for check_program in $^; do \
@@ -49,6 +59,7 @@ installcheck-local: atconfig atlocal $(TESTSUITE)
 	  $(TESTSUITEFLAGS)
 
 DISTCLEANFILES = atconfig
+CLEANFILES = $(check_PROGRAMS__)
 
 clean-local:
 	test ! -f '$(TESTSUITE)' || \

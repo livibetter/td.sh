@@ -33,6 +33,15 @@ Or to your home:
 
 To uninstall, use ``uninstall`` target.
 
+Options
+-------
+
+``--disable-bash``
+  do not build Bash implementation
+
+``--disable-c``
+  do not build C implementation
+
 
 Usage
 =====

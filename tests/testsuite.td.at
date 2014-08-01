@@ -1,6 +1,8 @@
 m4_define([AT_TD_TEST], [
 AT_SETUP([$1])
 
+AT_SKIP_IF([test "x$3" == xno])
+
 AT_CHECK([$2 0],,
 [0 seconds
 ])
@@ -110,6 +112,15 @@ AT_CHECK([$2 1 60],,
 AT_CLEANUP
 ])  # AT_TD_TEST
 
-AT_TD_TEST([td], [$abs_top_builddir/src/td])
+AT_ARG_OPTION_ARG(
+  [enable-bash],
+  AS_HELP_STRING([--enable-bash], [enable Bash test])
+)
 
-AT_TD_TEST([td.sh], [$abs_top_builddir/src/td.sh])
+AT_ARG_OPTION_ARG(
+  [enable-c],
+  AS_HELP_STRING([--enable-c], [enable C test])
+)
+
+AT_TD_TEST([td.sh], [$abs_top_builddir/src/td.sh], [$at_arg_enable_bash])
+AT_TD_TEST([td], [$abs_top_builddir/src/td], [$at_arg_enable_c])

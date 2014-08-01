@@ -9,6 +9,21 @@ AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 AM_EXTRA_RECURSIVE_TARGETS([benchmark])
 AM_PROG_AR
 LT_INIT
+
+AC_ARG_ENABLE(
+  [bash],
+  [AS_HELP_STRING([--disable-bash], [do not build Bash implementation])],
+  [AS_IF([test "x$enable_bash" != xno], [enable_bash=yes])],
+  [enable_bash=yes]
+)
+
+AC_ARG_ENABLE(
+  [c],
+  [AS_HELP_STRING([--disable-c], [do not build C implementation])],
+  [AS_IF([test "x$enable_c" != xno], [enable_c=yes])],
+  [enable_c=yes]
+)
+
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_TESTDIR([tests])
@@ -42,13 +57,25 @@ AC_CONFIG_FILES([
   Makefile
   lib/Makefile
   src/Makefile
-  src/td.sh
   tests/Makefile
   tests/atlocal
   tests/benchmark.sh
 ],[
-  chmod +x src/td.sh
   chmod +x tests/benchmark.sh
 ])
+
+AS_IF([test "x$enable_bash" != xno], [
+  AC_CONFIG_FILES([
+    src/td.sh
+  ], [
+    chmod +x src/td.sh
+  ])
+])
+
+AC_SUBST([enable_bash])
+AC_SUBST([enable_c])
+
+AM_CONDITIONAL([ENABLE_BASH], [test "x$enable_bash" != xno])
+AM_CONDITIONAL([ENABLE_C],    [test "x$enable_c"    != xno])
 
 AC_OUTPUT
