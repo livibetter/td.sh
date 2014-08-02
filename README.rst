@@ -49,6 +49,9 @@ Options
 ``--disable-c``
   do not build C implementation
 
+``--without-check``
+  do not run Check unittest
+
 
 Usage
 =====

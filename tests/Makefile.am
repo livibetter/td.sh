@@ -4,6 +4,7 @@
 check_PROGRAMS__ = check_libtd
 
 if ENABLE_C
+if WITH_CHECK
   AM_CFLAGS = -std=c99 -Wall -Wextra
 
   check_PROGRAMS = $(check_PROGRAMS__)
@@ -11,6 +12,7 @@ if ENABLE_C
   check_libtd_SOURCES = check_libtd.c $(top_srcdir)/lib/td.h
   check_libtd_CFLAGS  = $(AM_CFLAGS) @CHECK_CFLAGS@
   check_libtd_LDADD   = $(top_builddir)/lib/libtd.la @CHECK_LIBS@
+endif
 endif
 
 # Modified from Autoconf manual
@@ -50,9 +52,13 @@ check-local: $(TESTSUITE_ATS) atconfig atlocal $(TESTSUITE) run-check-programs
 	  $(TESTSUITEFLAGS)
 
 run-check-programs: $(check_PROGRAMS)
+if ENABLE_C
+if WITH_CHECK
 	for check_program in $^; do \
 	  $(SHELL) "$$check_program" || exit 1; \
 	done
+endif
+endif
 
 installcheck-local: atconfig atlocal $(TESTSUITE)
 	$(SHELL) '$(TESTSUITE)' AUTOTEST_PATH='$(bindir)' \

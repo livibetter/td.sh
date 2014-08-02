@@ -24,6 +24,17 @@ AC_ARG_ENABLE(
   [enable_c=yes]
 )
 
+AC_ARG_WITH(
+  [check],
+  [AS_HELP_STRING([--without-check], [do not run Check unittest])],
+  [AS_IF(
+    [test "x$with_check" != xno],
+    [with_check=check],
+    [with_check=no; has_check=skipped]
+  )],
+  [with_check=check]
+)
+
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_TESTDIR([tests])
@@ -39,7 +50,15 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
 # Checks for libraries.
-PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
+AS_IF(
+  [test "x$with_check" == xcheck],
+  [PKG_CHECK_MODULES(
+    [CHECK],
+    [check >= 0.9.4],
+    [has_check=yes; with_check=yes],
+    [has_check=no;  with_check=no]
+  )],
+)
 
 # Checks for header files.
 AC_CHECK_HEADERS([ \
@@ -78,6 +97,8 @@ AC_SUBST([enable_c])
 AM_CONDITIONAL([ENABLE_BASH], [test "x$enable_bash" != xno])
 AM_CONDITIONAL([ENABLE_C],    [test "x$enable_c"    != xno])
 
+AM_CONDITIONAL([WITH_CHECK],  [test "x$with_check"  != xno])
+
 AC_OUTPUT
 
 AC_MSG_RESULT([
@@ -95,6 +116,10 @@ AC_MSG_RESULT([
   CFLAGS              = ${CFLAGS}
   LDFLAGS             = ${LDFLAGS}
 
+  has Check           = ${has_check}
+
   build Bash          = ${enable_bash}
   build C             = ${enable_c}
+
+  with Check          = ${with_check}
 ])
