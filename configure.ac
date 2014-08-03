@@ -75,6 +75,7 @@ AC_CHECK_HEADER_STDBOOL
 AC_CONFIG_FILES([
   Makefile
   lib/Makefile
+  lib/pkgconfig/Makefile
   src/Makefile
   tests/Makefile
   tests/atlocal
@@ -88,6 +89,14 @@ AS_IF([test "x$enable_bash" != xno], [
     src/td.sh
   ], [
     chmod +x src/td.sh
+  ])
+])
+
+AS_IF([test "x$enable_c" != xno], [
+  dnl force ${pkgconfigdir} to be set
+  AS_IF([test "x$pkgconfigdir" == x], [PKG_INSTALLDIR])
+  AC_CONFIG_FILES([
+    lib/pkgconfig/libtd.pc
   ])
 ])
 
@@ -111,6 +120,7 @@ AC_MSG_RESULT([
   bindir              = ${bindir}
   libdir              = ${libdir}
   includedir          = ${includedir}
+  pkgconfigdir        = ${pkgconfigdir}
 
   CC                  = ${CC}
   CFLAGS              = ${CFLAGS}

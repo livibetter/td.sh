@@ -1,3 +1,5 @@
+SUBDIRS = pkgconfig
+
 # ensure all output files will be cleaned despite the used options changeing
 # in invoking ./configure
 
