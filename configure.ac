@@ -24,6 +24,27 @@ AC_ARG_ENABLE(
   [enable_c=yes]
 )
 
+AC_ARG_ENABLE(
+  [python],
+  [AS_HELP_STRING([--disable-python], [do not build Python bindings])],
+  [AS_IF([test "x$enable_python" != xno], [enable_python=check])],
+  [enable_python=check]
+)
+
+AC_ARG_ENABLE(
+  [python2],
+  [AS_HELP_STRING([--disable-python2], [do not build Python 2 binding])],
+  [AS_IF([test "x$enable_python2" != xno], [enable_python2=check])],
+  [enable_python2=check]
+)
+
+AC_ARG_ENABLE(
+  [python3],
+  [AS_HELP_STRING([--disable-python3], [do not build Python 3 binding])],
+  [AS_IF([test "x$enable_python3" != xno], [enable_python3=check])],
+  [enable_python3=check]
+)
+
 AC_ARG_WITH(
   [check],
   [AS_HELP_STRING([--without-check], [do not run Check unittest])],
@@ -48,6 +69,29 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
+
+AS_IF(
+  [test "x$enable_python" == xcheck],
+  [
+    AC_PATH_PROG([PYTHON2], [python2], [])
+    AC_PATH_PROG([PYTHON3], [python3], [])
+    AS_IF(
+      [test ! -z "$PYTHON2" -a "x$enable_python2" == xcheck],
+      [enable_python2=yes],
+      [enable_python2=no]
+    )
+    AS_IF(
+      [test ! -z "$PYTHON3" -a "x$enable_python3" == xcheck],
+      [enable_python3=yes],
+      [enable_python3=no]
+    )
+    AS_IF(
+      [test "x$enable_python2" == xyes -o "x$enable_python3" == xyes],
+      [enable_python=yes],
+      [enable_python=no]
+    )
+  ]
+)
 
 # Checks for libraries.
 AS_IF(
@@ -76,6 +120,7 @@ AC_CONFIG_FILES([
   Makefile
   lib/Makefile
   lib/pkgconfig/Makefile
+  python/Makefile
   src/Makefile
   tests/Makefile
   tests/atlocal
@@ -92,19 +137,42 @@ AS_IF([test "x$enable_bash" != xno], [
   ])
 ])
 
-AS_IF([test "x$enable_c" != xno], [
+AS_IF([test "x$enable_c" == xyes], [
   dnl force ${pkgconfigdir} to be set
   AS_IF([test "x$pkgconfigdir" == x], [PKG_INSTALLDIR])
   AC_CONFIG_FILES([
     lib/pkgconfig/libtd.pc
   ])
+  AC_CONFIG_LINKS([
+    lib/td.h:lib/td.h
+  ])
+], [
+  enable_python=no
+  with_check=no
+])
+
+AS_IF([test "x$enable_python" == xyes], [
+  AC_CONFIG_LINKS([
+    python/ctd.pxd:python/ctd.pxd
+    python/setup.py:python/setup.py
+    python/td.pyx:python/td.pyx
+    tests/testsuite.td.py:tests/testsuite.td.py
+  ])
+], [
+  enable_python2=no
+  enable_python3=no
 ])
 
 AC_SUBST([enable_bash])
 AC_SUBST([enable_c])
+AC_SUBST([enable_python2])
+AC_SUBST([enable_python3])
 
 AM_CONDITIONAL([ENABLE_BASH], [test "x$enable_bash" != xno])
 AM_CONDITIONAL([ENABLE_C],    [test "x$enable_c"    != xno])
+
+AM_CONDITIONAL([ENABLE_PYTHON2], [test "x$enable_python2" != xno])
+AM_CONDITIONAL([ENABLE_PYTHON3], [test "x$enable_python3" != xno])
 
 AM_CONDITIONAL([WITH_CHECK],  [test "x$with_check"  != xno])
 
@@ -126,10 +194,15 @@ AC_MSG_RESULT([
   CFLAGS              = ${CFLAGS}
   LDFLAGS             = ${LDFLAGS}
 
+  PYTHON2             = ${PYTHON2}
+  PYTHON3             = ${PYTHON3}
+
   has Check           = ${has_check}
 
   build Bash          = ${enable_bash}
   build C             = ${enable_c}
+  build Python 2      = ${enable_python2}
+  build Python 3      = ${enable_python3}
 
   with Check          = ${with_check}
 ])

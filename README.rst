@@ -49,6 +49,15 @@ Options
 ``--disable-c``
   do not build C implementation
 
+``--disable-python``
+  do not build Python bindings
+
+  ``--disable-python2``
+    do not build Python 2 binding
+
+  ``--disable-python3``
+    do not build Python 3 binding
+
 ``--without-check``
   do not run Check unittest
 

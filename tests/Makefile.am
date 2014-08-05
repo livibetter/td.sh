@@ -39,6 +39,7 @@ EXTRA_DIST = \
   atlocal.in \
   $(TESTSUITE_ATS) \
   $(TESTSUITE) \
+  testsuite.td.py \
   benchmark.sh.in
 TESTSUITE = $(srcdir)/testsuite
 TESTSUITE_ATS = \
@@ -49,6 +50,8 @@ check-local: $(TESTSUITE_ATS) atconfig atlocal $(TESTSUITE) run-check-programs
 	$(SHELL) '$(TESTSUITE)' \
 	  --enable-bash=$(enable_bash) \
 	  --enable-c=$(enable_c) \
+	  --enable-python2=$(enable_python2) \
+	  --enable-python3=$(enable_python3) \
 	  $(TESTSUITEFLAGS)
 
 run-check-programs: $(check_PROGRAMS)

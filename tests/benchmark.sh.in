@@ -4,48 +4,71 @@ trap 'kill $tmpcount_pid ; rm "$tmpcount" ; exit 130' INT
 
 enable_bash=@enable_bash@
 enable_c=@enable_c@
+enable_python2=@enable_python2@
+enable_python3=@enable_python3@
 
+test_command () {
+
+  echo "Benchmarking ${TD[@]}"
+  echo -n "Please wait for 5 seconds..."
+  tmpcount="$(mktemp)"
+  ( trap exit TERM; "${SETUP[@]}"; while :; do "${TD[@]}" 180122; echo >> "$tmpcount"; done ) &>/dev/null &
+  tmpcount_pid=$!
+  sleep 5
+  kill $tmpcount_pid
+  echo -ne "\e[3K\e[0G$(bc <<< "$(wc -l < "$tmpcount") / 5") conversions per second via $VIA.\n"
+  rm "$tmpcount"
+
+}
+
+# Performance test for src/td.sh
 if test "x$enable_bash" != xno; then
 
-  # Performance test for src/td.sh
+  SCRIPT='@abs_top_builddir@/src/td.sh'
 
-  TD="@abs_top_builddir@/src/td.sh"
+  SETUP=(source "$SCRIPT")
+  VIA='function calls'
+  TD=(print_td)
 
-  echo "Benchmarking $TD"
-  echo -n "Please wait for 5 seconds..."
-  tmpcount="$(mktemp)"
-  ( trap exit TERM; source "$TD"; while :; do print_td 180122; echo >> "$tmpcount"; done ) &>/dev/null &
-  tmpcount_pid=$!
-  sleep 5
-  kill $tmpcount_pid
-  echo -ne "\e[2K\e[0G$(bc <<< "$(wc -l < "$tmpcount") / 5") conversions per second via function calls.\n"
-  rm "$tmpcount"
+  test_command
 
-  echo -n "Please wait for 5 seconds..."
-  tmpcount="$(mktemp)"
-  ( trap exit TERM; while :; do "$TD" 180122; echo >> "$tmpcount"; done ) &>/dev/null &
-  tmpcount_pid=$!
-  sleep 5
-  kill $tmpcount_pid
-  echo -ne "\e[2K\e[0G$(bc <<< "$(wc -l < "$tmpcount") / 5") conversions per second via script executions.\n"
-  rm "$tmpcount"
+  SETUP=()
+  VIA='script executions'
+  TD=("$SCRIPT")
+
+  test_command
 
 fi
 
+# Performance test for src/td
 if test "x$enable_c" != xno; then
 
-  # Performance test for src/td
+  SETUP=()
+  VIA='script executions'
+  TD=('@abs_top_builddir@/src/td')
 
-  TD="@abs_top_builddir@/src/td"
+  test_command
 
-  echo "Benchmarking $TD"
-  echo -n "Please wait for 5 seconds..."
-  tmpcount="$(mktemp)"
-  ( trap exit TERM; while :; do "$TD" 180122; echo >> "$tmpcount"; done ) &>/dev/null &
-  tmpcount_pid=$!
-  sleep 5
-  kill $tmpcount_pid
-  echo -ne "\e[2K\e[0G$(bc <<< "$(wc -l < "$tmpcount") / 5") conversions per second.\n"
-  rm "$tmpcount"
+fi
+
+# Performance test for Python 2 binding
+if test "x$enable_python2" != xno; then
+
+  SETUP=()
+  VIA='script executions'
+  TD=(python2 '@abs_top_builddir@/tests/testsuite.td.py')
+
+  test_command
+
+fi
+
+# Performance test for Python 3 binding
+if test "x$enable_python3" != xno; then
+
+  SETUP=()
+  VIA='script executions'
+  TD=(python3 '@abs_top_builddir@/tests/testsuite.td.py')
+
+  test_command
 
 fi

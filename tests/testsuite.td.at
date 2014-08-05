@@ -122,5 +122,43 @@ AT_ARG_OPTION_ARG(
   AS_HELP_STRING([--enable-c], [enable C test])
 )
 
+AT_ARG_OPTION_ARG(
+  [enable-python2],
+  AS_HELP_STRING([--enable-python2], [enable Python 2 binding test])
+)
+
+AT_ARG_OPTION_ARG(
+  [enable-python3],
+  AS_HELP_STRING([--enable-python3], [enable Python 3 binding test])
+)
+
 AT_TD_TEST([td.sh], [$abs_top_builddir/src/td.sh], [$at_arg_enable_bash])
 AT_TD_TEST([td], [$abs_top_builddir/src/td], [$at_arg_enable_c])
+AT_TD_TEST(
+  [Python 2 binding: print_td],
+  [
+    LD_LIBRARY_PATH=$abs_top_builddir/lib/.libs \
+    PYTHONPATH=$abs_top_builddir/python \
+    python2 $abs_top_builddir/tests/testsuite.td.py \
+  ], [$at_arg_enable_python2])
+AT_TD_TEST(
+  [Python 2 binding: sprint_td],
+  [
+    LD_LIBRARY_PATH=$abs_top_builddir/lib/.libs \
+    PYTHONPATH=$abs_top_builddir/python \
+    python2 $abs_top_builddir/tests/testsuite.td.py -s \
+  ], [$at_arg_enable_python2])
+AT_TD_TEST(
+  [Python 3 binding: print_td],
+  [
+    LD_LIBRARY_PATH=$abs_top_builddir/lib/.libs \
+    PYTHONPATH=$abs_top_builddir/python \
+    python3 $abs_top_builddir/tests/testsuite.td.py \
+  ], [$at_arg_enable_python3])
+AT_TD_TEST(
+  [Python 3 binding: sprint_td],
+  [
+    LD_LIBRARY_PATH=$abs_top_builddir/lib/.libs \
+    PYTHONPATH=$abs_top_builddir/python \
+    python3 $abs_top_builddir/tests/testsuite.td.py -s \
+  ], [$at_arg_enable_python3])
