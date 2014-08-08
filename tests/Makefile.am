@@ -50,6 +50,7 @@ check-local: $(TESTSUITE_ATS) atconfig atlocal $(TESTSUITE) run-check-programs
 	$(SHELL) '$(TESTSUITE)' \
 	  --enable-bash=$(enable_bash) \
 	  --enable-c=$(enable_c) \
+	  --enable-bash-loadable=$(enable_bash_loadable) \
 	  --enable-python2=$(enable_python2) \
 	  --enable-python3=$(enable_python3) \
 	  $(TESTSUITEFLAGS)

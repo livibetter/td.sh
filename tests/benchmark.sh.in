@@ -51,6 +51,17 @@ if test "x$enable_c" != xno; then
 
 fi
 
+# Performance test for bash/td
+if test "x$enable_bash_loadable" != xno; then
+
+  SETUP=('enable' '-f' '@abs_top_builddir@/bash/td' 'td')
+  VIA='Bash loadable execution'
+  TD=('td')
+
+  test_command
+
+fi
+
 # Performance test for Python 2 binding
 if test "x$enable_python2" != xno; then
 

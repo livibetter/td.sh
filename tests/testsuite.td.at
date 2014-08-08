@@ -1,7 +1,7 @@
 m4_define([AT_TD_TEST], [
 AT_SETUP([$1])
 
-AT_SKIP_IF([test "x$3" == xno])
+AT_SKIP_IF([test "x$3" != xyes])
 
 AT_CHECK([$2 0],,
 [0 seconds
@@ -80,7 +80,7 @@ AT_CHECK([$2 -P 60],,
 [1 minute @&t@
 ])
 
-AT_CHECK([$2 -P -p 60],,
+AT_CHECK([$2 -P -p -- 60],,
 [ 1 minute @&t@
 ])
 
@@ -123,6 +123,11 @@ AT_ARG_OPTION_ARG(
 )
 
 AT_ARG_OPTION_ARG(
+  [enable-bash-loadable],
+  AS_HELP_STRING([--enable-loadable-bash], [enable Bash loadable test])
+)
+
+AT_ARG_OPTION_ARG(
   [enable-python2],
   AS_HELP_STRING([--enable-python2], [enable Python 2 binding test])
 )
@@ -134,6 +139,12 @@ AT_ARG_OPTION_ARG(
 
 AT_TD_TEST([td.sh], [$abs_top_builddir/src/td.sh], [$at_arg_enable_bash])
 AT_TD_TEST([td], [$abs_top_builddir/src/td], [$at_arg_enable_c])
+AT_TD_TEST(
+  [Bash loadable],
+  [
+    enable -f $abs_top_builddir/bash/td td; \
+    td \
+  ], [$at_arg_enable_bash_loadable])
 AT_TD_TEST(
   [Python 2 binding: print_td],
   [

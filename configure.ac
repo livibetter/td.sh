@@ -25,6 +25,36 @@ AC_ARG_ENABLE(
 )
 
 AC_ARG_ENABLE(
+  [bash-loadable],
+  [AS_HELP_STRING([--enable-bash-loadable=BASH_HEADER_PATH], [build Bash loadable])],
+  [
+    AS_IF(
+      [test "x$enable_bash_loadable" != xno],
+      [
+        AS_IF(
+          [test "x$enable_bash_loadable" == xyes],
+          [AC_MSG_ERROR([please supply the path to Bash header files using --enable-bash-loadable=PATH])]
+        )
+        AC_MSG_CHECKING([whether Bash headers at $enable_bash_loadable])
+        AS_IF(
+          [test -f "$enable_bash_loadable/builtins.h"],
+          [
+            AC_MSG_RESULT([yes])
+            BASH_INC="$enable_bash_loadable"
+            enable_bash_loadable=yes
+          ],
+          [
+            AC_MSG_RESULT([no])
+            AC_MSG_ERROR([cannot find Bash header files at $enable_bash_loadable])
+          ]
+        )
+      ]
+    )
+  ],
+  [enable_bash_loadable=no]
+)
+
+AC_ARG_ENABLE(
   [python],
   [AS_HELP_STRING([--disable-python], [do not build Python bindings])],
   [AS_IF([test "x$enable_python" != xno], [enable_python=check])],
@@ -118,6 +148,7 @@ AC_CHECK_HEADER_STDBOOL
 
 AC_CONFIG_FILES([
   Makefile
+  bash/Makefile
   lib/Makefile
   lib/pkgconfig/Makefile
   python/Makefile
@@ -165,11 +196,15 @@ AS_IF([test "x$enable_python" == xyes], [
 
 AC_SUBST([enable_bash])
 AC_SUBST([enable_c])
+AC_SUBST([enable_bash_loadable])
+AC_SUBST([BASH_INC])
 AC_SUBST([enable_python2])
 AC_SUBST([enable_python3])
 
 AM_CONDITIONAL([ENABLE_BASH], [test "x$enable_bash" != xno])
 AM_CONDITIONAL([ENABLE_C],    [test "x$enable_c"    != xno])
+
+AM_CONDITIONAL([ENABLE_BASH_LOADABLE], [test "x$enable_bash_loadable" != xno])
 
 AM_CONDITIONAL([ENABLE_PYTHON2], [test "x$enable_python2" != xno])
 AM_CONDITIONAL([ENABLE_PYTHON3], [test "x$enable_python3" != xno])
@@ -190,6 +225,8 @@ AC_MSG_RESULT([
   includedir          = ${includedir}
   pkgconfigdir        = ${pkgconfigdir}
 
+  Bash headers        = ${BASH_INC}
+
   CC                  = ${CC}
   CFLAGS              = ${CFLAGS}
   LDFLAGS             = ${LDFLAGS}
@@ -201,6 +238,7 @@ AC_MSG_RESULT([
 
   build Bash          = ${enable_bash}
   build C             = ${enable_c}
+  build Bash Loadable = ${enable_bash_loadable}
   build Python 2      = ${enable_python2}
   build Python 3      = ${enable_python3}
 

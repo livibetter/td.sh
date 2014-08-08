@@ -23,16 +23,38 @@
 
 #include <td.h>
 
+#ifndef BASH_LOADABLE
 #include <getopt.h>
+#endif
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-#define PROGRAM "td"
+#ifdef BASH_LOADABLE
+#include <builtins.h>
+#include <shell.h>
+#include <bashgetopt.h>
+#endif
+
+#define NAME    "td"
+#define USAGE   NAME " [-a] [-P] [-p[X]] [[duration] ...]"
+
+#ifndef BASH_LOADABLE
+#define GETOPT()  getopt(argc, argv, "aPp::")
+#define OPTARG    optarg
+#else
+#define GETOPT()  internal_getopt(list, "aPp;")
+#define OPTARG    list_optarg
+#endif
+
 
 int
+#ifndef BASH_LOADABLE
 main(int argc, char *argv[])
+#else
+td_builtin (WORD_LIST *list)
+#endif
 {
   int i;
   int opt;
@@ -41,7 +63,10 @@ main(int argc, char *argv[])
   char pad_char = '\0';
   long long t;
 
-  while ((opt = getopt(argc, argv, "aPp::")) != -1) {
+#ifdef BASH_LOADABLE
+  reset_internal_getopt();
+#endif
+  while ((opt = GETOPT()) != -1) {
     switch (opt) {
     case 'a':
       print_all_numbers = true;
@@ -50,20 +75,51 @@ main(int argc, char *argv[])
       pad_units = true;
       break;
     case 'p':
-      if (!optarg)
+      if (!OPTARG)
         pad_char = ' ';
       else
-        pad_char = optarg[0];
+        pad_char = OPTARG[0];
       break;
     default:
-      fprintf(stderr, "Usage %s [-P]", PROGRAM);
-      exit(EXIT_FAILURE);
+#ifndef BASH_LOADABLE
+      fprintf(stderr, "Usage: " USAGE "\n");
+      return EXIT_FAILURE;
+#else
+      return EX_USAGE;
+#endif
     }
   }
 
+#ifndef BASH_LOADABLE
   for (i = optind; i < argc; i++) {
     t = atoll(argv[i]);
+#else
+  for (list = loptend; list; list = list->next) {
+    t = atoll(list->word->word);
+#endif
     print_td(t, print_all_numbers, pad_units, pad_char);
   }
-  return 0;
+
+#ifndef BASH_LOADABLE
+  return EXIT_SUCCESS;
+#else
+  return EXECUTION_SUCCESS;
+#endif
 }
+
+
+#ifdef BASH_LOADABLE
+char *td_doc[] = {
+  "Convert seconds to human readable time duration.",
+  (char *) NULL
+};
+
+struct builtin td_struct = {
+  "td",
+  td_builtin,
+  BUILTIN_ENABLED,
+  td_doc,
+  USAGE,
+  0
+};
+#endif

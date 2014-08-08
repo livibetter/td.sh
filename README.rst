@@ -49,6 +49,9 @@ Options
 ``--disable-c``
   do not build C implementation
 
+``--enable-bash=BASH_HEADER_PATH``
+  build Bash loadable
+
 ``--disable-python``
   do not build Python bindings
 
