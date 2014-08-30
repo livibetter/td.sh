@@ -11,6 +11,7 @@ if ENABLE_C
   lib_LTLIBRARIES = $(lib_LTLIBRARIES__)
 
   libtd_la_SOURCES = td.c td.h
+  libtd_la_LDFLAGS = -version-info 1:0:0
 endif
 
 CLEANFILES = $(lib_LTLIBRARIES__)

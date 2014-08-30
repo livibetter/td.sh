@@ -7,6 +7,9 @@
 [bash/Makefile.am]
 	* install as prefix/bin/td.bash
 
+[lib/Makefile.am]
+	* version-info: 1:0:0
+
 [main.c]
 	* print_help: add for help message
 	* main: add -h option for help message

@@ -1,5 +1,5 @@
 ===========================
-NEWS for ?.?.? (????-??-??)
+NEWS for 0.2.0 (2014-08-30)
 ===========================
 
 Changes since 1.0.3 (2014-07-06)
@@ -10,6 +10,9 @@ Changes since 1.0.3 (2014-07-06)
 	* build  C library
 	* Python 2 and Python 3 bindings
 	* Bash loadable extension
+
+[libtd]
+	* version 1:0:0
 
 [td]
 
