@@ -1,4 +1,9 @@
+2014-08-31  Yu-Jie Lin  <livibetter@gmail.com>
+	* fix tag/release v0.2.0 to v2.0.0
+
 2014-08-30  Yu-Jie Lin  <livibetter@gmail.com>
+	* release v0.2.0
+
 [FILES]
 	* add: ChangeLog
 	* add: NEWS
