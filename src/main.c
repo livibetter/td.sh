@@ -21,6 +21,7 @@
 /* SOFTWARE.                                                                       */
 /***********************************************************************************/
 
+#include "../config.h"
 #include <td.h>
 
 #ifndef BASH_LOADABLE
@@ -37,14 +38,20 @@
 #include <bashgetopt.h>
 #endif
 
-#define NAME    "td"
-#define USAGE   NAME " [OPTIONS] [--] [[duration] ...]"
+#ifndef BASH_LOADABLE
+#define NAME    PACKAGE_NAME
+#else
+#define NAME    PACKAGE_NAME ".bash"
+#endif
+#define USAGE   PACKAGE_NAME " [OPTIONS] [--] [[duration] ...]"
+
+#define PRINT_VERSION()  puts(NAME " " PACKAGE_VERSION)
 
 #ifndef BASH_LOADABLE
-#define GETOPT()  getopt(argc, argv, "haPp::")
+#define GETOPT()  getopt(argc, argv, "hVaPp::")
 #define OPTARG    optarg
 #else
-#define GETOPT()  internal_getopt(list, "haPp;")
+#define GETOPT()  internal_getopt(list, "hVaPp;")
 #define OPTARG    list_optarg
 #endif
 #define URL_WEB   "https://github.com/livibetter/td.sh"
@@ -57,6 +64,7 @@ char *td_doc[] = {
   "Options:",
   "",
   "  -h         display this help message",
+  "  -V         display version string",
   "  -a         print all numbers and units",
   "  -P         unit string padding",
   "  -p[X]      number padding using character X",
@@ -100,6 +108,9 @@ td_builtin (WORD_LIST *list)
     switch (opt) {
     case 'h':
       print_help();
+      goto out;
+    case 'V':
+      PRINT_VERSION();
       goto out;
     case 'a':
       print_all_numbers = true;

@@ -14,7 +14,9 @@ Changes since 1.0.3 (2014-07-06)
 [td]
 
 	* add -h for help message
+	* add -V for version string
 
 [td.bash]
 
 	* add -h for help message
+	* add -V for version string

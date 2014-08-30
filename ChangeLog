@@ -10,3 +10,4 @@
 [main.c]
 	* print_help: add for help message
 	* main: add -h option for help message
+	* main: add -V option for version string
