@@ -38,15 +38,45 @@
 #endif
 
 #define NAME    "td"
-#define USAGE   NAME " [-a] [-P] [-p[X]] [[duration] ...]"
+#define USAGE   NAME " [OPTIONS] [--] [[duration] ...]"
 
 #ifndef BASH_LOADABLE
-#define GETOPT()  getopt(argc, argv, "aPp::")
+#define GETOPT()  getopt(argc, argv, "haPp::")
 #define OPTARG    optarg
 #else
-#define GETOPT()  internal_getopt(list, "aPp;")
+#define GETOPT()  internal_getopt(list, "haPp;")
 #define OPTARG    list_optarg
 #endif
+#define URL_WEB   "https://github.com/livibetter/td.sh"
+#define URL_BUG   "https://github.com/livibetter/td.sh/issues"
+
+
+char *td_doc[] = {
+  "Convert seconds to human readable time duration.",
+  "",
+  "Options:",
+  "",
+  "  -h         display this help message",
+  "  -a         print all numbers and units",
+  "  -P         unit string padding",
+  "  -p[X]      number padding using character X",
+  (char *) NULL
+};
+
+
+void
+print_help () {
+  unsigned int i;
+
+  puts("Usage: " USAGE);
+  for (i = 0; i < sizeof(td_doc) / sizeof(char *); i++)
+    if (td_doc[i])
+      puts(td_doc[i]);
+
+  printf("\n"\
+         "Report bugs to <" URL_BUG ">\n"\
+         "Home page: <" URL_WEB ">\n");
+}
 
 
 int
@@ -68,6 +98,9 @@ td_builtin (WORD_LIST *list)
 #endif
   while ((opt = GETOPT()) != -1) {
     switch (opt) {
+    case 'h':
+      print_help();
+      goto out;
     case 'a':
       print_all_numbers = true;
       break;
@@ -100,6 +133,7 @@ td_builtin (WORD_LIST *list)
     print_td(t, print_all_numbers, pad_units, pad_char);
   }
 
+out:
 #ifndef BASH_LOADABLE
   return EXIT_SUCCESS;
 #else
@@ -109,11 +143,6 @@ td_builtin (WORD_LIST *list)
 
 
 #ifdef BASH_LOADABLE
-char *td_doc[] = {
-  "Convert seconds to human readable time duration.",
-  (char *) NULL
-};
-
 struct builtin td_struct = {
   "td",
   td_builtin,
