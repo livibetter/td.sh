@@ -1,6 +1,7 @@
 2014-08-30  Yu-Jie Lin  <livibetter@gmail.com>
 [FILES]
 	* add: ChangeLog
+	* add: NEWS
 	* rename: CHANGES.mkd to docs/CHANGES-OLD.mkd
 
 [main.c]
