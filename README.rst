@@ -52,6 +52,14 @@ Options
 ``--enable-bash-loadable=BASH_HEADER_PATH``
   build Bash loadable
 
+  The loaable is installed as ``prefix/bin/td.bash``, it can be enabled by, as
+  long as ``td.bash`` is in ``$PATH``:
+
+  .. code:: sh
+
+    $ enable -f "$(which td.bash)`` td
+    $ td 123
+
 ``--disable-python``
   do not build Python bindings
 

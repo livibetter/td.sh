@@ -4,6 +4,16 @@ endif
 
 all: $(ALL_DEPS)
 
+install-exec-hook: $(ALL_DEPS)
+if ENABLE_BASH_LOADABLE
+	$(INSTALL) -m755 td $(DESTDIR)$(bindir)/td.bash
+endif
+
+uninstall-local:
+if ENABLE_BASH_LOADABLE
+	$(RM) $(DESTDIR)$(bindir)/td.bash
+endif
+
 td: libtd.o td.o
 	gcc -shared -Wl,-soname,$@ -o $@ $^
 

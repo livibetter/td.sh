@@ -4,6 +4,9 @@
 	* add: NEWS
 	* rename: CHANGES.mkd to docs/CHANGES-OLD.mkd
 
+[bash/Makefile.am]
+	* install as prefix/bin/td.bash
+
 [main.c]
 	* print_help: add for help message
 	* main: add -h option for help message
