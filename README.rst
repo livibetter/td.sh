@@ -4,7 +4,17 @@ td.sh
 
   Converting seconds to human readable time duration.
 
-**td.sh** project has two implementations, C (``td``) and Bash (``td.sh``).
+**td.sh** project has two implementations:
+
+1. C:
+
+   The C implementation include
+
+   * library (``libtd``),
+   * command-line program (``td``), and
+   * Bash loadable (``td-bash``), loaded as ``td`` shell builtin.
+
+2. Bash script (``td.sh``)
 
 .. contents:: **Contents**
    :local:
@@ -52,12 +62,12 @@ Options
 ``--enable-bash-loadable=BASH_HEADER_PATH``
   build Bash loadable
 
-  The loaable is installed as ``prefix/bin/td.bash``, it can be enabled by, as
+  The loadable is installed as ``prefix/bin/td.bash``, it can be enabled by, as
   long as ``td.bash`` is in ``$PATH``:
 
   .. code:: sh
 
-    $ enable -f "$(which td.bash)`` td
+    $ enable -f "$(which td.bash)" td
     $ td 123
 
 ``--disable-python``
@@ -138,6 +148,24 @@ Benchmark
 .. code:: sh
 
   $ make benchmark
+
+Here is a sample result of benchmarking:
+
++-------------+---------------------------------+
+| conversions | benchmark                       |
++=============+=================================+
+| 2,060       | ``td.sh`` function calls        |
++-------------+---------------------------------+
+| 184         | ``td.sh`` script executions     |
++-------------+---------------------------------+
+| 60          | ``td`` command executions       |
++-------------+---------------------------------+
+| 24,092      | ``td.bash`` loadable executions |
++-------------+---------------------------------+
+| 40          | Python 2 script executions      |
++-------------+---------------------------------+
+| 16          | Python 3 script executions      |
++-------------+---------------------------------+
 
 
 License

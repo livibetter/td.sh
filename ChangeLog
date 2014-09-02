@@ -1,3 +1,7 @@
+2014-09-02  Yu-Jie Lin  <livibetter@gmail.com>
+[tests/benchmark.sh.in]
+	* fix: VIA strings to clarify which benchmark is run
+
 2014-08-31  Yu-Jie Lin  <livibetter@gmail.com>
 	* fix tag/release v0.2.0 to v2.0.0
 
